@@ -1,4 +1,4 @@
-import funcoes_adm as adm
+import funcoes_adm as admin
 
 adm = [['ericafonso@gmail.com', 'eric12345', 102030405060], ['sadhiellly_00@gmail.com', 'sadhi54321', 1000000000]]
 
