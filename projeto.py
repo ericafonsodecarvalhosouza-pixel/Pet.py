@@ -37,19 +37,10 @@ while opc != 0:
             tipo = input('Deseja logar como usuário ou administrador(adm): ')
 
         if tipo == '1':
-            login = input('Digite o seu e-mail: ')
-            while '@' not in login and '.com' not in login:
-                print('E-mail inválido')
-                login = input('Digite o seu e-mail: ')
+            admin.cadastrar_usuário(usuarios)
+            print('Cadastro realizado com sucesso!')
             
-            senha = input('Digite sua senha(mínimo de 8 caracteres): ')
-            while len(senha) < 8:
-                print('Senha com menos de 8 caracteres.')
-                senha = input('Digite sua senha(mínimo de 8 caracteres): ')
             
-            usuarios.append([login, senha])
-            print('Usuário cadastrado com sucesso!')
-
         elif tipo == '2':
             login_adm = input('Digite e-mail de cadastro: ')
             while '@' not in login_adm and '.com' not in login_adm:
