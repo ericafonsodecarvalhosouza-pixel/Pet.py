@@ -1,6 +1,6 @@
 import funcoes_adm as admin
 
-adm = [['ericafonso@gmail.com', 'eric12345', 102030405060], ['sadhiellly_00@gmail.com', 'sadhi54321', 1000000000]]
+adm = [['ericafonso@gmail.com', 'eric12345', '102030405060'], ['sadhiellly_00@gmail.com', 'sadhi54321', '1000000000']]
 
 usuarios = [['sadhi.elly@gmail.com', 'sadhi1234'],['vitoroque@gmail.com', 'tigrevitinho123'], ['ericfonso@gmail.com', 'topazio999']]
 
@@ -38,28 +38,12 @@ while opc != 0:
 
         if tipo == '1':
             admin.cadastrar_usuário(usuarios)
-            print('Cadastro realizado com sucesso!')
-            
+            print('Cadastro realizado com sucesso!')    
             
         elif tipo == '2':
-            login_adm = input('Digite e-mail de cadastro: ')
-            while '@' not in login_adm and '.com' not in login_adm:
-                print('E-mail inválido.')
-                login_adm = input('Digite e-mail de cadastro: ')
-
-            senha_adm = input('Digite sua senha(mínimo de 8 caracteres): ')
-            while len(senha_adm) < 8:
-                print('Senha com menos de 8 caracteres.')
-                senha_adm = input('Digite sua senha(mínimo de 8 caracteres): ')
-
-            id_verify_adm = int(input('Crie um ID de verifição que possua 10 ou mais números: '))
-            while len(str(id_verify_adm)) < 10 or len(str(id_verify_adm)) > 10:
-                print('ID de verificação não possui 10 números.')
-                id_verify_adm = int(input('Crie um ID de verifição que possua 10 ou mais números: '))
-
-            adm.append([login_adm, senha_adm, id_verify_adm])
-            print('Cadastro do administrador realizada com sucesso!')
-
+            admin.cadastrar_admin(adm)
+            print('Cadastro realizado com sucesso.')
+            
     elif opc == 3:
         
         print('--- ÁREA DO CLIENTE ---')
