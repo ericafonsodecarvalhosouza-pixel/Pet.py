@@ -1,8 +1,8 @@
 import funcoes_adm as admin
 
-adm = [['ericafonso@gmail.com', 'eric12345', '102030405060'], ['sadhiellly_00@gmail.com', 'sadhi54321', '1000000000']]
+adm = [['ericafonso@gmail.com', 'eric12345', '102030405060', "admin" ], ['sadhiellly_00@gmail.com', 'sadhi54321', '1000000000', 'admin']]
 
-usuarios = [['sadhi.elly@gmail.com', 'sadhi1234'],['vitoroque@gmail.com', 'tigrevitinho123'], ['ericfonso@gmail.com', 'topazio999']]
+usuarios = [['sadhi.elly@gmail.com', 'sadhi1234', 'cliente'],['vitoroque@gmail.com', 'tigrevitinho123', 'cliente'], ['ericfonso@gmail.com', 'topazio999', 'cliente']]
 
 produtos = [['SHAMPOO', 12.00, 50], ['PERFUME', 25.00, 100], ['RAÇÃO PEDIGREE', 40.00, 75]]
 
@@ -48,19 +48,12 @@ while opc != 0:
         
         print('--- ÁREA DO CLIENTE ---')
         while True:
-            email_cliente = input('Digite o seu e-mail de cadastro: ')
-            senha_cliente = input('Digite sua senha: ')
-            logado = False
-            for u in usuarios:
-                if u[0] == email_cliente and u[1] == senha_cliente:
-                    logado = True
-                    break
-
+            logado = admin.login_usuario(usuarios)
             if logado:
                 print('Bem-vindo(a) ao PetSertão!')
                 break
             else:
-                print('E-mail ou senha incorretos.')
+                print('Não encontramos o seu login.')
 
         carrinho = []  
         agendamentos = []
