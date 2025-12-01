@@ -31,9 +31,16 @@ def cadastrar_admin(adm):
     adm.append([login, senha, id_verify, type])
     
 def login_usuario(usuarios):
-    email_cliente = input('Digite o seu e-mail de cadastro: ')
-    senha_cliente = input('Digite sua senha: ')
+    login_ver = input('Digite o seu e-mail de cadastro: ')
+    senha_ver = input('Digite sua senha: ')
     for us in usuarios:
-        if us[0] == email_cliente and us[1] == senha_cliente:
+        if us[0] == login_ver and us[1] == senha_ver:
             print('Logado com sucesso. Bem vindo ao PetSertão!')
+            return True
+        
+def login_adm(adm):
+    login_ver = input('Digite o seu e-mail de cadastro: ')
+    id_ver = input('Digite seu id de verificação: ')
+    for us in adm:
+        if us[0] == login_ver and us[2] == id_ver:
             return True

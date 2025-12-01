@@ -172,19 +172,12 @@ while opc != 0:
 
         print('--- ÁREA DO ADMINISTRADOR ---')
         while True:
-            confirm1 = input('Digite o seu e-mail de cadastro: ')
-            confirm2 = int(input('Digite o seu ID de verificação: '))
-            acesso = False
-            for info in adm:
-                if info[0] == confirm1 and info[2] == confirm2:
-                    acesso = True
-                    break
-
-            if acesso:
-                print('Acesso para o gerenciamento de produtos realizado com sucesso!')
+            logado = admin.login_adm(adm)
+            if logado:
+                print('Entrando na área de operações!')
                 break
             else:
-                print('E-mail ou ID de verificação incorretos.')
+                print('Não encontramos o seu login.')
 
         opcao = 9999999
         while opcao != 0:
