@@ -66,7 +66,7 @@ def cadastrar(usuarios, adm):
     
 #-----------------------------LOGIN DE USUÁRIO-----------------------------------------------
     
-def login_usuario(usuarios):
+def login_cliente(usuarios):
     login_ver = input('Digite o seu e-mail de cadastro: ')
     senha_ver = input('Digite sua senha: ')
     for us in usuarios:
@@ -214,6 +214,20 @@ def operacoes_menu_admin():
         opcao = int(input('Digite a opção desejada: '))
     return opcao
 
+def opercacoes_menu_cliente():
+    print('----------- MENU CLIENTE -----------')
+    print('1. Comprar produto')
+    print('2. Agendar serviço')
+    print('3. Ver carrinho')
+    print('4. Ver meus agendamentos')
+    print('5. Salvar carrinho de compras e agenda de serviços')
+    print('6. Restaurar carrinho de compras e agenda de serviços')
+    print('0. Sair da área do cliente')
+    
+    opcao = int(input('Digite a opção desejada: '))
+    while not faux.op_escolha(opcao):
+        opcao = int(input('Digite a opção desejada: '))
+    return opcao
 #----------------------------------------CADASTRO DE PRODUTO/SERVIÇO------------------------
 
 def produto(produtos, estoque_inicial):
@@ -713,3 +727,219 @@ def remover_cupom(cupons):
     
     cupons.pop(indice)
     print('Cupom removido com sucesso!')
+    
+#--------------------------COMPRAR PRODUTO/SERVIÇO----------------------------------------
+
+def comprar_produto(produtos, carrinho):
+    if len(produtos) == 0:
+        print('Nenhum produto disponível.')
+        return
+
+    print('--- PRODUTOS ---')
+    i = 0
+    for p in produtos:
+        print(f'{i} - {p["nome"]} | R$ {p["valor"]} | Estoque: {p["estoque"]}')
+        i += 1
+
+    indice = int(input('Digite o índice do produto: '))
+    while indice < 0 or indice >= len(produtos):
+        print('Índice inválido.')
+        indice = int(input('Digite o índice do produto: '))
+
+    qtd = int(input('Quantidade desejada: '))
+    while qtd <= 0 or qtd > produtos[indice]['estoque']:
+        print('Quantidade inválida.')
+        qtd = int(input('Quantidade desejada: '))
+
+    total = qtd * produtos[indice]['valor']
+    carrinho.append({
+        'nome': produtos[indice]['nome'],
+        'quantidade': qtd,
+        'total': total
+    })
+
+    produtos[indice]['estoque'] -= qtd
+    print('Produto adicionado ao carrinho.')
+    
+def agendar_servico(servicos, agendamentos):
+    if len(servicos) == 0:
+        print('Nenhum serviço disponível.')
+        return
+    
+    print('--- SERVIÇOS ---')
+    i = 0
+    for s in servicos:
+        print(f'{i} - {s["nome"]} | R$ {s["valor"]}')
+        i += 1
+
+    indice = int(input('Digite o índice do serviço: '))
+    while indice < 0 or indice >= len(servicos):
+        print('Índice inválido.')
+        indice = int(input('Digite o índice do serviço: '))
+    
+    horarios = servicos[indice]['horarios']
+    disponiveis = []
+
+    print('Horários disponíveis:')
+    j = 0
+    for h in horarios:
+        if h[1] == 'disponivel':
+            print(f'{j} - {h[0]}')
+            disponiveis.append(j)
+        j += 1
+
+    if len(disponiveis) == 0:
+        print('Nenhum horário disponível.')
+        return
+
+    escolha = int(input('Escolha o horário: '))
+    if escolha not in disponiveis:
+        print('Horário inválido.')
+        return
+
+    horarios[escolha][1] = 'reservado'
+    agendamentos.append({
+        'servico': servicos[indice]['nome'],
+        'hora': horarios[escolha][0]
+    })
+
+    print('Serviço agendado com sucesso!')
+
+#--------------------------VER CARRINHO/AGENDA-------------------------------------------
+
+def ver_carrinho(carrinho, cupons):
+    if len(carrinho) == 0:
+            print('Carrinho vazio.')
+    else:
+        total = 0
+        for c in carrinho:
+            print(f"{c['quantidade']}x {c['nome']} - R$ {c['total']}")
+            total += c['total']
+        print(f'Total da compra: R$ {total}')
+        usar_cupom = input('Você possui cupom de desconto? [S/N]: ').upper()
+
+        if usar_cupom == 'S':
+            nome_cupom = input('Digite o nome do cupom: ').upper()
+            cupom_encontrado = False
+
+            for cupom in cupons:
+                if cupom['cupom'] == nome_cupom:
+                    desconto = cupom['desconto']
+                    valor_desconto = total * desconto / 100
+                    total = total - valor_desconto
+
+                    print(f'Cupom aplicado: {desconto}% de desconto')
+                    print(f'Valor do desconto: R$ {valor_desconto}')
+                    print(f'Valor final do produto com desconto: R$ {total}')
+                    cupom_encontrado = True
+                    break
+
+            if not cupom_encontrado:
+                print('Cupom inválido ou inexistente.')
+                
+        finalizar = input('Finalizar compra? [S/N]: ').upper()
+        if finalizar == 'S':
+            carrinho.clear()
+            print('Compra finalizada.')
+            
+            
+def ver_servicos(agendamentos):
+    if len(agendamentos) == 0:
+        print('Nenhum agendamento.')
+    else:
+        for a in agendamentos:
+            print(f"{a['servico']} às {a['hora']}")
+
+#--------------------------SALVAR CARRINHO/AGENDA------------------------------------------
+
+def salvar_carrinho_txt(carrinho):
+    arquivo = open('compras_cliente.txt', 'w')
+    
+    for c in carrinho:
+        arquivo.write(f"{c['nome']} - {c['quantidade']} unidades - R$ {c['total']}\n")
+        
+    arquivo.close()
+
+def salvar_agenda_txt(agendamentos):
+    arquivo = open('agendamentos_cliente.txt', 'w')
+    
+    for a in agendamentos:
+        
+        arquivo.write(f"{a['servico']} - {a['hora']}\n")
+    arquivo.close()
+
+def salvar_compras_agendamentos(carrinho, agendamentos):
+    salvar_carrinho_txt(carrinho)
+    salvar_agenda_txt(agendamentos)
+
+    print('Produtos e serviços agendandos salvos para comprar quando quiser!')
+    print('Ao retornar para comprar, antes de finalizar sua compra ou ver serviços, restaure seu carrinho e agenda usando a opção 6!')
+    
+#--------------------------------IMPORTAR CARRINHO/AGENDA--------------------------------------
+
+def importar_carrinho(carrinho):
+    arquivo = open('Compras_cliente.txt', 'r')
+    linhas = arquivo.readlines()
+    
+    for linha in linhas:
+        linha = linha.replace('\n', '')
+        linha = linha.replace('unidades ', '')
+        linha = linha.replace('R$ ', '')
+        if len(linha) > 0:
+            
+            linha = linha.split(' - ')
+            igual = False
+            for produto in carrinho:
+                if linha[0] == produto['nome'] and int(linha[1]) == produto['quantidade'] and float(linha[3]) == produto['total']:
+                    igual = True
+                    break
+            
+            if igual:
+                continue
+            
+            nome = linha[0]
+            quantidade = int(linha[1])
+            total = float(linha[2])
+            
+            carrinho.append({
+            'nome': nome,
+            'quantidade': quantidade,
+            'total': total
+        })
+    
+    arquivo.close()
+            
+def importar_agenda(agendamentos):
+    arquivo = open('agendamentos_cliente.txt', 'r')
+    linhas = arquivo.readlines()
+    
+    for linha in linhas:
+        linha = linha.replace('\n', '')
+        if len(linha) > 0:
+            
+            linha = linha.split(' - ')
+            igual = False
+            for servico in agendamentos:
+                if linha[0] == servico['servico'] and linha[1] == servico['hora']:
+                    igual = True
+                    break
+                
+            if igual:
+                continue
+            
+            servico = linha[0]
+            hora = linha[1]
+            agendamentos.append({
+            'servico': servico,
+            'hora': hora
+        })
+    
+    arquivo.close()
+    
+def importar_agenda_carrinho(carrinho, agendamentos):
+    importar_carrinho(carrinho)
+    
+    importar_agenda(agendamentos)
+    
+    print('Seu carrinho e agenda foram restaurados.')
+    print('Caso adicione mais produtos e agende mais serviços, utilize a opção 5 para salvar todos os seus produtos e não perca nada!')
