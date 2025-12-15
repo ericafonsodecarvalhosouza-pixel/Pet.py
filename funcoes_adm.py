@@ -96,7 +96,6 @@ def tirar_foto(nome):
     pessoa = nome.replace(' ', '_')
     data = datetime.now().strftime("%d_%m_%Y")
     nome_arquivo = f'UltimoAcesso_{pessoa}_{data}.jpg'
-    
     camera = cv2.VideoCapture(0)
     
     ret, frame = camera.read()
