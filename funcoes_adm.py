@@ -1,4 +1,7 @@
 import funcoes_auxiliares as faux
+from datetime import datetime
+import cv2
+
 
 #----------------------------------------------CADASTRO DE USUÁRIO------------------------------
 
@@ -71,6 +74,8 @@ def login_cliente(usuarios):
     senha_ver = input('Digite sua senha: ')
     for us in usuarios:
         if us['email'] == login_ver and us['senha'] == senha_ver:
+            nome = us['nome']
+            tirar_foto(nome)
             return True
         
     return False
@@ -81,10 +86,27 @@ def login_adm(adm):
     
     for i in adm:
         if login == i['email'] and id_verify == i['id']:
+            nome = i['nome']
+            tirar_foto(nome)
             return True
         
     return False
 
+def tirar_foto(nome):
+    pessoa = nome.replace(' ', '_')
+    data = datetime.now().strftime("%d_%m_%Y")
+    nome_arquivo = f'UltimoAcesso_{pessoa}_{data}.jpg'
+    
+    camera = cv2.VideoCapture(0)
+    
+    ret, frame = camera.read()
+    
+    if ret:
+        cv2.imwrite(nome_arquivo, frame)
+        
+    camera.release()
+        
+    
 #--------------------------IMPORTAR USUÁRIOS-------------------------------------------------
 
 def importar_cadastros_adm(adm):

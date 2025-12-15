@@ -1,5 +1,6 @@
 import funcoes_adm as admin
 
+
 adm = [
     {'nome': 'Eric', 'email': 'ericafonso@gmail.com', 'senha': 'erico12345', 'id': '12345678901', 'tipo': 'admin'}
 ]
